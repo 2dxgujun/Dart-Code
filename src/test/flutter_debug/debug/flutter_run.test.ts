@@ -39,7 +39,7 @@ describe(`flutter run debugger (launch on ${flutterTestDeviceId})`, () => {
 		deferUntilLast(() => watchPromise("Killing flutter_tester processes", killFlutterTester()));
 	});
 
-	it("runs and remains active until told to quit", async () => {
+	it.only("runs and remains active until told to quit", async () => {
 		const config = await startDebugger(dc, flutterHelloWorldMainFile);
 		await waitAllThrowIfTerminates(dc,
 			dc.assertOutputContains("stdout", `Launching lib${path.sep}main.dart on ${deviceName} in debug mode...\n`),
