@@ -19,8 +19,8 @@ export class DartDebugClient extends DebugClient {
 	private readonly port: number | undefined;
 	private currentSession?: DebugSession;
 
-	constructor(private readonly logger: Logger, args: DebugClientArgs, private debugCommands: DebugCommandHandler, testCoordinator: TestSessionCoordindator | undefined) {
-		super(args.runtime, args.executable, args.args, "dart", undefined, true);
+	constructor(logger: Logger, args: DebugClientArgs, private debugCommands: DebugCommandHandler, testCoordinator: TestSessionCoordindator | undefined) {
+		super(logger, args.runtime, args.executable, args.args, "dart", undefined, true);
 		this.port = args.port;
 
 		// HACK to handle incoming requests..

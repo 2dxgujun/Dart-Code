@@ -18,6 +18,7 @@ import assert = require('assert');
 import net = require('net');
 import { ProtocolClient } from 'vscode-debugadapter-testsupport/lib/protocolClient';
 import { DebugProtocol } from 'vscode-debugprotocol';
+import { Logger } from '../shared/interfaces';
 
 export interface ILocation {
 	path?: string;
@@ -66,7 +67,7 @@ export class DebugClient extends ProtocolClient {
 	 *     return dc.hitBreakpoint({ program: 'test.js' }, 'test.js', 15);
 	 * });
 	 */
-	constructor(runtime: string | undefined, executable: string | undefined, args: string[] | undefined, debugType: string, spawnOptions?: cp.SpawnOptionsWithoutStdio, enableStderr?: boolean) {
+	constructor(protected readonly logger: Logger, runtime: string | undefined, executable: string | undefined, args: string[] | undefined, debugType: string, spawnOptions?: cp.SpawnOptionsWithoutStdio, enableStderr?: boolean) {
 		super();
 		this._runtime = runtime;
 		this._executable = executable;
@@ -109,16 +110,21 @@ export class DebugClient extends ProtocolClient {
 				this._adapterProcess.stderr!.on('data', (data: string) => {
 					// if (this._enableStderr) {
 					console.log(sanitize(data));
+					this.logger?.error(data);
 					// }
 				});
 
 				this._adapterProcess.on('error', (err) => {
 					console.log(err);
+					this.logger?.error(err);
 					reject(err);
 				});
 				this._adapterProcess.on('exit', (code: number, signal: string) => {
 					console.log(`DA PROCESS exited with code ${code}!!`);
 					if (code) {
+						this.logger?.error(`DA PROCESS exited with code ${code}!!`);
+					} else {
+						this.logger?.info(`DA PROCESS exited with code ${code}!!`);
 						// done(new Error('debug adapter exit code: ' + code));
 					}
 				});
@@ -143,10 +149,12 @@ export class DebugClient extends ProtocolClient {
 
 	private stopAdapter() {
 		if (this._adapterProcess) {
+			this.logger?.warn(`Killing adapter process!`);
 			this._adapterProcess.kill();
 			this._adapterProcess = undefined;
 		}
 		if (this._socket) {
+			this.logger?.warn(`Ending socket!`);
 			this._socket.end();
 			this._socket = undefined;
 		}
