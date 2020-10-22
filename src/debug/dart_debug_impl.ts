@@ -654,6 +654,7 @@ export class DartDebugSession extends DebugSession {
 					// 2019-07-10: Increased delay because when we tell Flutter to stop the VM service quits quickly and
 					// this code results in a TerminatedEvent() even though the process hasn't quit. The TerminatedEvent()
 					// results in VS Code sending disconnectRequest() and we then try to more forefully kill.
+					this.log(`Sending TerminatedEvent 7`);
 					setTimeout(() => {
 						if (!this.processExited) {
 							this.logDapEvent(new TerminatedEvent());

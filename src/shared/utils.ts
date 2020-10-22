@@ -135,7 +135,7 @@ export function errorString(error: SomeError): string {
 	else if (typeof error === "string")
 		return error;
 	else
-		return error.message || "<empty error message>";
+		return error.message || `<empty error>: ${new Error().stack}`;
 }
 
 type BufferedLogMessage =
