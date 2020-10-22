@@ -1632,9 +1632,14 @@ export class DartDebugSession extends DebugSession {
 					this.sendResponse(response);
 					break;
 				case "exposeUrlResponse":
+					this.log(`Got exposeUrlResponse for ${args.originalUrl}!`);
 					const completer = this.urlExposeCompleters[args.originalUrl];
-					if (completer)
+					if (completer) {
+						this.log(`Resolving as ${args.exposedUrl}`);
 						completer.resolve({ url: args.exposedUrl });
+					} else {
+						this.log(`Could not find completer!`);
+					}
 					break;
 				case "updateDebugOptions":
 					this.debugExternalLibraries = !!args.debugExternalLibraries;

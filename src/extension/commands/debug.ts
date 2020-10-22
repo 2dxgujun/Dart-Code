@@ -492,6 +492,7 @@ export class DebugCommands {
 			try {
 				const exposedUrl = await envUtils.exposeUrl(vs.Uri.parse(originalUrl, true), this.logger);
 				// HACK: Convert %24 back to $
+				this.logger.warn(`Sending back exposeUrlResponse ("${originalUrl}" / "${exposedUrl}")`);
 				session.session.customRequest("exposeUrlResponse", { originalUrl, exposedUrl });
 			} catch (e) {
 				this.logger.error(`Failed to expose URL ${originalUrl}: ${e}`);
