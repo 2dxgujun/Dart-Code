@@ -153,6 +153,11 @@ export class DartDebugSession extends DebugSession {
 
 	protected async launchRequest(response: DebugProtocol.LaunchResponse, args: DartLaunchRequestArguments): Promise<void> {
 		this.logDapRequest("launchRequest", args);
+
+		process.on("uncaughtException", (err) => {
+			this.logger?.error(`Uncaught2: ${err}`);
+		});
+
 		if (!args || !args.dartPath || (this.requiresProgram && !args.program)) {
 			this.logToUser("Unable to restart debugging. Please try ending the debug session and starting again.\n");
 			this.logDapEvent(new TerminatedEvent());

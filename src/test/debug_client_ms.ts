@@ -119,6 +119,9 @@ export class DebugClient extends ProtocolClient {
 					this.logger?.error(err);
 					reject(err);
 				});
+				this._adapterProcess.on('uncaughtException', (err) => {
+					this.logger?.error(`Uncaught1: ${err}`);
+				});
 				this._adapterProcess.on('exit', (code: number, signal: string) => {
 					console.log(`DA PROCESS exited with code ${code}!!`);
 					if (code) {
