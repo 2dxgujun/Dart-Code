@@ -3,6 +3,7 @@ import * as assert from "assert";
 import { Writable } from "stream";
 import { DebugSession, DebugSessionCustomEvent, window } from "vscode";
 import { DebugProtocol } from "vscode-debugprotocol";
+import { Logger } from "../shared/interfaces";
 import { TestSessionCoordindator } from "../shared/test/coordindator";
 import { Notification, Test, TestDoneNotification, TestStartNotification } from "../shared/test_protocol";
 import { waitFor } from "../shared/utils/promises";
@@ -18,7 +19,7 @@ export class DartDebugClient extends DebugClient {
 	private readonly port: number | undefined;
 	private currentSession?: DebugSession;
 
-	constructor(args: DebugClientArgs, private debugCommands: DebugCommandHandler, testCoordinator: TestSessionCoordindator | undefined) {
+	constructor(private readonly logger: Logger, args: DebugClientArgs, private debugCommands: DebugCommandHandler, testCoordinator: TestSessionCoordindator | undefined) {
 		super(args.runtime, args.executable, args.args, "dart", undefined, true);
 		this.port = args.port;
 
@@ -37,7 +38,12 @@ export class DartDebugClient extends DebugClient {
 
 		// Set up handlers for any custom events our tests may rely on (can't find
 		// a way to just do them all 🤷‍♂️).
-		customEventsToForward.forEach((evt) => this.on(evt, (e) => this.handleCustomEvent(e)));
+		customEventsToForward.forEach((evt) => {
+			this.on(evt, (e: DebugSessionCustomEvent) => {
+				this.logger?.info(`Forwarding custom event for ${evt} / ${e?.event}!`);
+				this.handleCustomEvent(e);
+			});
+		});
 
 		// Log important events to make troubleshooting tests easier.
 		this.on("output", (event: DebugProtocol.OutputEvent) => {
@@ -101,6 +107,7 @@ export class DartDebugClient extends DebugClient {
 	}
 
 	private handleCustomEvent(e: DebugSessionCustomEvent) {
+		this.logger?.info(`Calling debugCommands handleDebugSessionCustomEvent for ${e.event}`);
 		this.debugCommands.handleDebugSessionCustomEvent({
 			body: e.body,
 			event: e.event,
