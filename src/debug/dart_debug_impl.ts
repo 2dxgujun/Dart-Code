@@ -242,7 +242,8 @@ export class DartDebugSession extends DebugSession {
 					await this.raceIgnoringErrors(() => this.lastLoggingEvent, 500);
 					setImmediate(() => {
 						this.logDapEvent(new TerminatedEvent());
-						this.sendEvent(new TerminatedEvent());
+						this.log(`Sending TerminatedEvent 2`);
+						setTimeout(() => this.sendEvent(new TerminatedEvent()), 500);
 					});
 				});
 			}
@@ -329,7 +330,8 @@ export class DartDebugSession extends DebugSession {
 		} catch (e) {
 			const messageSuffix = args.serviceInfoFile ? `\n    VM info was read from ${args.serviceInfoFile}` : "";
 			this.logToUser(`Unable to connect to VM service at ${url || "??"}${messageSuffix}\n    ${e}`);
-			this.sendEvent(new TerminatedEvent());
+			this.log(`Sending TerminatedEvent 5`);
+			setTimeout(() => this.sendEvent(new TerminatedEvent()), 500);
 			return;
 		}
 	}
@@ -638,7 +640,8 @@ export class DartDebugSession extends DebugSession {
 				// since we won't get a process exit event.
 				if (!this.childProcess || this.childProcess instanceof RemoteEditorTerminalProcess) {
 					this.logDapEvent(new TerminatedEvent());
-					this.sendEvent(new TerminatedEvent());
+					this.log(`Sending TerminatedEvent 6`);
+					setTimeout(() => this.sendEvent(new TerminatedEvent()), 500);
 				} else {
 					// In some cases the VM service closes but we never get the exit/close events from the process
 					// so this is a fallback to termiante the session after a short period. Without this, we have
@@ -647,6 +650,7 @@ export class DartDebugSession extends DebugSession {
 					// 2019-07-10: Increased delay because when we tell Flutter to stop the VM service quits quickly and
 					// this code results in a TerminatedEvent() even though the process hasn't quit. The TerminatedEvent()
 					// results in VS Code sending disconnectRequest() and we then try to more forefully kill.
+					this.log(`Sending TerminatedEvent 7`);
 					setTimeout(() => {
 						if (!this.processExited) {
 							this.logDapEvent(new TerminatedEvent());
