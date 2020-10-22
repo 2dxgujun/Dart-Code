@@ -14,11 +14,15 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, windows-latest]
+        os: [windows-latest]
         node-version: [10]
-        build-version: [dev]
+        build-version: [stable, dev]
         bot: [flutter_debug_chrome]
         include:
+          - build-version: stable
+            dart-version: stable
+            flutter-version: stable
+            code-version: stable
           - build-version: dev
             dart-version: dev
             flutter-version: dev
