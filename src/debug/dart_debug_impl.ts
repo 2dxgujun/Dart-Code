@@ -255,7 +255,8 @@ export class DartDebugSession extends DebugSession {
 			}
 		} catch (e) {
 			this.logToUser(`Unable to start debugging: ${e}`);
-			this.sendEvent(new TerminatedEvent());
+			this.log(`Sending TerminatedEvent 3`);
+			setTimeout(() => this.sendEvent(new TerminatedEvent()), 500);
 			return;
 		}
 
