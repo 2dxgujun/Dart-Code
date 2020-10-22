@@ -107,9 +107,9 @@ export class DebugClient extends ProtocolClient {
 				this._adapterProcess = cp.spawn(this._runtime!, [this._executable!, ...(this._args || [])], this._spawnOptions);
 				const sanitize = (s: string) => s.toString().replace(/\r?\n$/mg, '');
 				this._adapterProcess.stderr!.on('data', (data: string) => {
-					if (this._enableStderr) {
-						console.log(sanitize(data));
-					}
+					// if (this._enableStderr) {
+					console.log(sanitize(data));
+					// }
 				});
 
 				this._adapterProcess.on('error', (err) => {
@@ -117,6 +117,7 @@ export class DebugClient extends ProtocolClient {
 					reject(err);
 				});
 				this._adapterProcess.on('exit', (code: number, signal: string) => {
+					console.log(`DA PROCESS exited with code ${code}!!`);
 					if (code) {
 						// done(new Error('debug adapter exit code: ' + code));
 					}
