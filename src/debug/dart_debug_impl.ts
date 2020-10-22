@@ -17,7 +17,7 @@ import { errorString, notUndefined, PromiseCompleter, uniq, uriToFilePath } from
 import { sortBy } from "../shared/utils/array";
 import { applyColor, grey, grey2 } from "../shared/utils/colors";
 import { getRandomInt } from "../shared/utils/fs";
-import { parseStackFrame as extractLocationInfo } from "../shared/utils/stack_trace";
+import { MessageWithUriData } from "../shared/utils/stack_trace";
 import { DebuggerResult, Version, VM, VMClass, VMClassRef, VMErrorRef, VMEvent, VMFrame, VMInstance, VMInstanceRef, VMIsolate, VMIsolateRef, VMMapEntry, VMObj, VMScript, VMScriptRef, VMSentinel, VmServiceConnection, VMStack, VMTypeRef } from "./dart_debug_protocol";
 import { DebugAdapterLogger } from "./logging";
 import { ThreadInfo, ThreadManager } from "./threads";
@@ -2168,7 +2168,7 @@ export class DartDebugSession extends DebugSession {
 	// provide them!
 	protected logToUser(message: string, category?: string, colorText = (s: string) => s) {
 		// Extract stack frames from the message so we can do nicer formatting of them.
-		const frame = extractLocationInfo(message);
+		let frame: MessageWithUriData | undefined; // extractLocationInfo(message);
 
 		// If we get a multi-line message that contains an error/stack trace, process each
 		// line individually, so we can attach location metadata to individual lines.
