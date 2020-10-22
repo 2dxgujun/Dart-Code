@@ -268,8 +268,10 @@ export class DartDebugSession extends DebugSession {
 			// If we're not connecting a debugger and we spawned a remote process, we have
 			// no way of knowing when the process terminates and will have to just end the debug
 			// session immediately (it has no value anyway).
-			if (this.childProcess && this.childProcess instanceof RemoteEditorTerminalProcess)
-				setImmediate(() => this.sendEvent(new TerminatedEvent()), 0);
+			if (this.childProcess && this.childProcess instanceof RemoteEditorTerminalProcess) {
+				this.log(`Sending TerminatedEvent 4`);
+				setTimeout(() => this.sendEvent(new TerminatedEvent()), 500);
+			}
 		}
 	}
 
