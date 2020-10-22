@@ -1623,6 +1623,7 @@ export class DartDebugSession extends DebugSession {
 	}
 
 	protected async customRequest(request: string, response: DebugProtocol.Response, args: any): Promise<void> {
+		this.log(`Got customReqeuest for ${request}!`);
 		this.logDapRequest("customRequest", args);
 		try {
 			switch (request) {
