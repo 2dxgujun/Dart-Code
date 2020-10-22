@@ -16,13 +16,9 @@ jobs:
       matrix:
         os: [windows-latest]
         node-version: [10]
-        build-version: [stable, dev]
+        build-version: [dev]
         bot: [flutter_debug_chrome]
         include:
-          - build-version: stable
-            dart-version: stable
-            flutter-version: stable
-            code-version: stable
           - build-version: dev
             dart-version: dev
             flutter-version: dev
