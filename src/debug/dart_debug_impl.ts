@@ -161,7 +161,8 @@ export class DartDebugSession extends DebugSession {
 		if (!args || !args.dartPath || (this.requiresProgram && !args.program)) {
 			this.logToUser("Unable to restart debugging. Please try ending the debug session and starting again.\n");
 			this.logDapEvent(new TerminatedEvent());
-			this.sendEvent(new TerminatedEvent());
+			this.log(`Sending TerminatedEvent 1`);
+			setTimeout(() => this.sendEvent(new TerminatedEvent()), 500);
 			return;
 		}
 
